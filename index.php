@@ -65,7 +65,7 @@ $app->map('/', function () use ($app, $config) {
 $app->map('/login', function () use ($app, $config) {
   $access_token = null;
   if ($app->request()->post('username') == $config['user']['username'] &&
-    md5($app->request()->post('password')) == $config['user']['password']) {
+    $app->request()->post('password') == $config['user']['password']) {
     $access_token = getAccessToken($config['user']['uid']);
   	out(array(
   	  'uid' => $config['user']['uid'],
@@ -85,7 +85,8 @@ $app->map('/friends', function() use ($app, $config) {
   try {
     $db = new Mongo('mongodb://fbdublin.com/codingtest');
     $collection = $db->codingtest->friends;
-    $friends = $collection->find();
+    // Only retrieve the first 50. It's a demo after all.
+    $friends = $collection->find()->limit(50);
   } catch (Exception $e) {
     out(array('error' => true, 'message' => 'DB down.'));
   }
@@ -96,7 +97,7 @@ $app->map('/friends', function() use ($app, $config) {
       'id' => $friend['id'], 
       'name' => $friend['name'],
       'birthday' => $friend['birthday'],
-      'interests' => idx($friend, 'birthday', array()),
+      'interests' => idx($friend, 'interests', array()),
     );
   }
   uasort($f, 'sortByProximityDate');
