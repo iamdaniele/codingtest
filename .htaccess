@@ -1,8 +1,10 @@
-<IfModule mod_rewrite.c>
 RewriteEngine On
+
+# Some hosts may require you to use the `RewriteBase` directive.
+# If you need to use the `RewriteBase` directive, it should be the
+# absolute physical path to the directory that contains this htaccess file.
+#
+# RewriteBase /
+
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^css(.*)$ web/css/$1 [L]
-RewriteRule ^images(.*)$ web/images/$1 [L]
-RewriteRule ^js(.*)$ web/js/$1 [L]
-RewriteRule ^(.*)$ web/app.php [QSA,L]
-</IfModule>
+RewriteRule ^(.*)$ index.php [QSA,L]
